@@ -1,0 +1,51 @@
+Project 6 Debugging Log
+
+1. Potential cyclic JSON serialization
+HTTP status: N/A
+Cause: Bidirectional entity relationships can recursively serialize parent and child objects.
+Fix: API responses use DTOs and entity collection back-references are ignored where appropriate.
+
+2. Soft-deleted records appearing in reads
+HTTP status: N/A
+Cause: JpaRepository default findAll/findById do not automatically filter isActive.
+Fix: Active-only repository methods are used by services for reads.
+
+3. Missing related entity
+HTTP status: 404 or 400 depending on operation
+Cause: A referenced warehouse, customer, carrier, vehicle, driver, shipment or other record does not exist or is inactive.
+Fix: ResourceNotFoundException and BusinessRuleException are converted by GlobalExceptionHandler.
+
+4. Invalid request payload
+HTTP status: 400
+Cause: Blank strings, invalid email, non-positive numbers or invalid dates.
+Fix: Request DTOs use Jakarta Bean Validation and controllers use @Valid.
+
+5. Out-of-stock shipment
+HTTP status: 400
+Cause: Requested quantity is greater than active warehouse inventory.
+Fix: Shipment creation checks stock before decrementing inventory.
+
+6. Vehicle over capacity
+HTTP status: 400
+Cause: Shipment total weight exceeds selected vehicle capacity.
+Fix: Assignment and route-building logic reject the request.
+
+7. Vehicle or driver unavailable
+HTTP status: 400
+Cause: Vehicle or driver status is not AVAILABLE.
+Fix: Business service validates availability before assignment.
+
+8. Duplicate delivery-stop sequence
+HTTP status: 400
+Cause: Two active stops on the same route use the same sequence.
+Fix: Repository check and database unique constraint reject duplicates.
+
+9. Invoice generated too early
+HTTP status: 400
+Cause: Shipment status is not DELIVERED.
+Fix: Invoice generation validates shipment status first.
+
+10. Duplicate invoice for shipment
+HTTP status: 400
+Cause: An active invoice already exists for the shipment.
+Fix: Invoice repository existence check blocks the second invoice.
