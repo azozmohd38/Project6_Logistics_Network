@@ -1,0 +1,24 @@
+erDiagram
+    WAREHOUSE ||--o{ INVENTORY_ITEM : stocks
+    PRODUCT ||--o{ INVENTORY_ITEM : appears_in
+    CUSTOMER ||--o{ ADDRESS : owns
+    SERVICE_ZONE ||--o{ ADDRESS : covers
+
+    WAREHOUSE ||--o{ SHIPMENT : dispatches
+    CUSTOMER ||--o{ SHIPMENT : places
+    CARRIER ||--o{ SHIPMENT : handles
+    SHIPMENT ||--o{ SHIPMENT_ITEM : contains
+    PRODUCT ||--o{ SHIPMENT_ITEM : included_as
+
+    CARRIER ||--o{ VEHICLE : owns
+    CARRIER ||--o{ DRIVER : employs
+    VEHICLE ||--o{ ROUTE : assigned_to
+    DRIVER ||--o{ ROUTE : drives
+
+    ROUTE ||--o{ DELIVERY_STOP : contains
+    SHIPMENT ||--o{ DELIVERY_STOP : delivered_at
+    SHIPMENT ||--o{ TRACKING_EVENT : tracked_by
+
+    SHIPMENT ||--o| INVOICE : billed_by
+    CUSTOMER ||--o{ INVOICE : receives
+    WAREHOUSE ||--o{ STAFF : employs
