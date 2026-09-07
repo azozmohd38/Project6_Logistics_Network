@@ -73,6 +73,16 @@ jobs:
           cat app.log
           exit 1
 
+      - name: Export Hibernate-generated schema
+        run: |
+          mysqldump             --host=127.0.0.1             --port=3306             --user=root             --password=root             --no-data             --skip-comments             logistics_network > logistics_schema.sql
+
+      - name: Upload schema artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: logistics-schema
+          path: logistics_schema.sql
+
       - name: Print application log on failure
         if: failure()
         run: cat app.log || true
