@@ -13,4 +13,6 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
 
     @Query("select v from Vehicle v where v.isActive = true and lower(v.status) = 'available'")
     List<Vehicle> findCurrentlyAvailable();
+
+    long countByCarrierIdAndIsActiveTrue(Long carrierId);
 }
